@@ -52,7 +52,7 @@ public class MDPLife {
             if (a.toString().equals("action0")) {
                 return this.matrix[2][i][j];
             } else if (a.toString().equals("action1")) {
-                return this.matrix[2][i][j];
+                return this.matrix[3][i][j];
             } else {
                 throw new RuntimeException("Unknown action: " + a.toString());
             }
@@ -78,7 +78,7 @@ public class MDPLife {
         return pi;
     }
 
-    public String bestFirstAction(double gamma) {
+    public String runPI(double gamma) {
         PolicyIteration pi = computePolicy(gamma);
 
         double[] P = new double[this.numStates];
@@ -86,22 +86,25 @@ public class MDPLife {
             State s = GraphDefinedDomain.getState(this.domain, i);
             P[i] = pi.value(s);
         }
-
-        String actionName = null;
-        System.out.println(Arrays.toString(P));
-        if (P[1] >= P[2] && P[1] >= P[3]) actionName = "action a";
-        else if (P[2] >= P[1] && P[2] >= P[3]) actionName = "action b";
-        else if (P[3] >= P[1] && P[3] >= P[2]) actionName = "action c";
-        return actionName;
+        return Arrays.toString(P);
     }
 
     public static void main(String[] args) {
 
         double[][][] matrix = new double[4][30][30];
-        for (int k = 0; k < 4; k++) {
+        // transition probabilities
+        for (int k = 0; k < 2; k++) {
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 30; j++) {
-                    Random r = new Random();
+                    matrix[k][i][j] = 1./30;
+                }
+            }
+        }
+        // rewards
+        Random r = new Random();
+        for (int k = 2; k < 4; k++) {
+            for (int i = 0; i < 30; i++) {
+                for (int j = 0; j < 30; j++) {
                     matrix[k][i][j] = r.nextDouble();
                 }
             }
@@ -111,7 +114,7 @@ public class MDPLife {
         MDPLife mdp = new MDPLife(matrix);
 
         double gamma = 0.75;
-        System.out.println("Best initial action: " + mdp.bestFirstAction(gamma));
+        System.out.println("State values: " + mdp.runPI(gamma));
 
     }
 }

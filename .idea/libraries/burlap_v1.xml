@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="burlap_v1">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../burlap_v1.jar!/" />
+      <root url="jar://$USER_HOME$/tmp/burlap_v1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../burlap_v1.jar!/" />
+      <root url="jar://$USER_HOME$/tmp/burlap_v1.jar!/" />
     </SOURCES>
   </library>
 </component>
