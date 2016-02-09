@@ -26,6 +26,7 @@ public class MDPLife {
         for (int k = 0; k < 2; k++) {
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 30; j++) {
+                    // state, action, next state, probability
                     this.gdd.setTransition(i, k, j, matrix[k][i][j]);
                 }
             }
@@ -33,15 +34,15 @@ public class MDPLife {
 
         this.domain = this.gdd.generateDomain();
         this.initState = GraphDefinedDomain.getState(domain, 0);
-        this.rf = new FourParamRF(matrix);
+        this.rf = new CustomRF(matrix);
         this.tf = new NullTermination();
         this.hashFactory = new DiscreteStateHashFactory();
     }
 
-    public static class FourParamRF implements RewardFunction {
+    public static class CustomRF implements RewardFunction {
         double[][][] matrix;
 
-        public FourParamRF(double[][][] matrix) {
+        public CustomRF(double[][][] matrix) {
             this.matrix = matrix;
         }
 
@@ -59,6 +60,7 @@ public class MDPLife {
         }
     }
 
+    /*
     private ValueIteration computeValue(double gamma) {
         double maxDelta = 0.0001;
         int maxIterations = 1000;
@@ -67,6 +69,7 @@ public class MDPLife {
         vi.planFromState(this.initState);
         return vi;
     }
+    */
 
     private PolicyIteration computePolicy(double gamma) {
         double maxDelta = 0.0001;
@@ -96,6 +99,7 @@ public class MDPLife {
         for (int k = 0; k < 2; k++) {
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 30; j++) {
+                    // equally likely to end up in any state
                     matrix[k][i][j] = 1./30;
                 }
             }
@@ -105,14 +109,17 @@ public class MDPLife {
         for (int k = 2; k < 4; k++) {
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 30; j++) {
+                    // random reward for each transition
                     matrix[k][i][j] = r.nextDouble();
                 }
             }
         }
-        System.out.println(Arrays.deepToString(matrix));
+
+        // System.out.println(Arrays.deepToString(matrix));
 
         MDPLife mdp = new MDPLife(matrix);
 
+        // discount factor of 3/4
         double gamma = 0.75;
         System.out.println("State values: " + mdp.runPI(gamma));
 
